@@ -59,10 +59,12 @@ public class GameManager : NetworkManager
     public void instantiateButton(){
         Button newButton = Instantiate(button) as Button;
         newButton.transform.SetParent(HUD.transform, false);
+        NetworkServer.spawn(newButton);
         newButton.onClick.AddListener(initialization);
     }
 
     public void initialization(){
         
+
     }
 }
