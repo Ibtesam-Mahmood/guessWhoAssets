@@ -12885,7 +12885,7 @@ PrefabInstance:
     - target: {fileID: 224674173061577030, guid: d4529f47989526241929319abfdfc29d,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -28.000015
+      value: -28
       objectReference: {fileID: 0}
     - target: {fileID: 224681683108154520, guid: d4529f47989526241929319abfdfc29d,
         type: 3}
@@ -17868,6 +17868,7 @@ MonoBehaviour:
   playerSpawnMethod: 0
   spawnPrefabs:
   - {fileID: 7422797421047023574, guid: 4c31354884745405283d44a40d0b5a04, type: 3}
+  generalSpawn: {fileID: 2036360541}
   transforms:
   - {fileID: 655156706}
   - {fileID: 1973441707}
@@ -32167,8 +32168,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 554863622}
   - {fileID: 730255364}
+  - {fileID: 554863622}
   m_Father: {fileID: 1963177588}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
