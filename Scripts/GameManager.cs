@@ -5,6 +5,12 @@ using UnityEngine;
 using Mirror;
 using System;
 
+public enum GameHostState
+{
+    READY,
+    INGAME
+}
+
 public class GameManager : NetworkManager
 {
     public Transform generalSpawn;
@@ -14,21 +20,24 @@ public class GameManager : NetworkManager
 
     private List<GameObject> AI = new List<GameObject>(0);
     private List<GameObject> players = new List<GameObject>(0);
+
+    private GameHostState state;
+
+    
     
     public override void OnStartServer()
     {
-        for (int i = 0; i < transforms.Count; i++)
-        {
-            Debug.Log("Running");
-            GameObject temp = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "GuyAI"), transforms[i].position, transforms[i].rotation);
-            NetworkServer.Spawn(temp);
-            AI.Add(temp);
-        }
+        toReadyState();
 
-        instantiateButton();
+        //instantiateButton();
     }
 
     public override void OnServerAddPlayer(NetworkConnection conn){
+
+        if(state == GameHostState.INGAME)
+        {
+            return;
+        }
         
         GameObject player = Instantiate(playerPrefab, generalSpawn.position, generalSpawn.rotation);
         
@@ -42,13 +51,7 @@ public class GameManager : NetworkManager
     {
         if(numPlayers == 0)
         {
-            // destroy ball
-            while(AI.Count > 0)
-            {
-                GameObject temp = AI[0];
-                AI.RemoveAt(0);
-                Destroy(temp);
-            }
+            toReadyState();
         }
 
 
@@ -59,12 +62,43 @@ public class GameManager : NetworkManager
     public void instantiateButton(){
         Button newButton = Instantiate(button) as Button;
         newButton.transform.SetParent(HUD.transform, false);
-        NetworkServer.spawn(newButton);
+        //NetworkServer.Spawn(newButton);
         newButton.onClick.AddListener(initialization);
+    }
+
+    public void toReadyState()
+    {
+        state = GameHostState.INGAME;
+        disposeAI();
+        initializeAI();
+        
     }
 
     public void initialization(){
         
 
+    }
+
+    // --- AI control functions ---
+    private void initializeAI()
+    {
+        for (int i = 0; i < transforms.Count; i++)
+        {
+            Debug.Log("Running");
+            GameObject temp = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "GuyAI"), transforms[i].position, transforms[i].rotation);
+            NetworkServer.Spawn(temp);
+            AI.Add(temp);
+        }
+    }
+
+    private void disposeAI()
+    {
+        // destroy all AI
+        while (AI.Count > 0)
+        {
+            GameObject temp = AI[0];
+            AI.RemoveAt(0);
+            Destroy(temp);
+        }
     }
 }
