@@ -17868,8 +17868,25 @@ MonoBehaviour:
   playerSpawnMethod: 0
   spawnPrefabs:
   - {fileID: 7422797421047023574, guid: 4c31354884745405283d44a40d0b5a04, type: 3}
+<<<<<<< HEAD
   generalSpawn: {fileID: 2032439578}
   transforms: []
+=======
+  generalSpawn: {fileID: 2036360541}
+  transforms:
+  - {fileID: 655156706}
+  - {fileID: 1973441707}
+  - {fileID: 592424160}
+  - {fileID: 581090923}
+  - {fileID: 2075845859}
+  - {fileID: 922796741}
+  - {fileID: 2067834235}
+  - {fileID: 1158860157}
+  - {fileID: 215228386}
+  - {fileID: 2036360541}
+  - {fileID: 1116233737}
+  - {fileID: 1605530632}
+>>>>>>> d58fb0a10acbf6faf0be0366e481890a27fe7b8a
 --- !u!4 &1047445543
 Transform:
   m_ObjectHideFlags: 0
