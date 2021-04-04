@@ -68,7 +68,7 @@ public class GameManager : NetworkManager
 
     public void toReadyState()
     {
-        state = GameHostState.INGAME;
+        state = GameHostState.READY;
         disposeAI();
         initializeAI();
         
