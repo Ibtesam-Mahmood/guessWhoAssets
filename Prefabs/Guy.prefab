@@ -154,6 +154,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Guy
       objectReference: {fileID: 0}
+    - target: {fileID: 8138940439899564008, guid: 4c31354884745405283d44a40d0b5a04,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8241140696692151731, guid: 4c31354884745405283d44a40d0b5a04,
         type: 3}
       propertyPath: m_AssetId
