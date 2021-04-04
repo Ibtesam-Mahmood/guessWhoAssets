@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 using Mirror;
 using System;
@@ -8,11 +9,11 @@ public class GameManager : NetworkManager
 {
     public Transform generalSpawn;
     public List<Transform> transforms;
+    public GameObject HUD;
+    public Button button;
 
     private List<GameObject> AI = new List<GameObject>(0);
-
-    int hunterCount = 0;
-    int hiderCount = 0;
+    private List<GameObject> players = new List<GameObject>(0);
     
     public override void OnStartServer()
     {
@@ -23,13 +24,18 @@ public class GameManager : NetworkManager
             NetworkServer.Spawn(temp);
             AI.Add(temp);
         }
+
+        instantiateButton();
     }
 
     public override void OnServerAddPlayer(NetworkConnection conn){
         
         GameObject player = Instantiate(playerPrefab, generalSpawn.position, generalSpawn.rotation);
+        
+        players.Add(player);
 
         NetworkServer.AddPlayerForConnection(conn, player);
+
     }
 
     public override void OnServerDisconnect(NetworkConnection conn)
@@ -48,5 +54,15 @@ public class GameManager : NetworkManager
 
         // call base functionality (actually destroys the player)
         base.OnServerDisconnect(conn);
+    }
+
+    public void instantiateButton(){
+        Button newButton = Instantiate(button) as Button;
+        newButton.transform.SetParent(HUD.transform, false);
+        newButton.onClick.AddListener(initialization);
+    }
+
+    public void initialization(){
+        
     }
 }
