@@ -6,9 +6,13 @@ using System;
 
 public class GameManager : NetworkManager
 {
+    public Transform generalSpawn;
     public List<Transform> transforms;
 
     private List<GameObject> AI = new List<GameObject>(0);
+
+    int hunterCount = 0;
+    int hiderCount = 0;
     
     public override void OnStartServer()
     {
@@ -22,14 +26,10 @@ public class GameManager : NetworkManager
     }
 
     public override void OnServerAddPlayer(NetworkConnection conn){
-
-        System.Random r = new System.Random();
-        int randomIndex = r.Next(0, transforms.Count);
-
-        GameObject player = Instantiate(playerPrefab, transforms[randomIndex].position, transforms[randomIndex].rotation);
+        
+        GameObject player = Instantiate(playerPrefab, generalSpawn.position, generalSpawn.rotation);
 
         NetworkServer.AddPlayerForConnection(conn, player);
-
     }
 
     public override void OnServerDisconnect(NetworkConnection conn)
