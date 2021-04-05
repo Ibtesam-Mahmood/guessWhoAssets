@@ -38,6 +38,11 @@ public class GameManager : NetworkManager
         {
             return;
         }
+
+        if(numPlayers == 1)
+        {
+            //Hunter
+        }
         
         GameObject player = Instantiate(playerPrefab, generalSpawn.position, generalSpawn.rotation);
         
