@@ -64,12 +64,12 @@ public class GameManager : NetworkManager
         base.OnServerDisconnect(conn);
     }
 
-    public void instantiateButton(){
-        Button newButton = Instantiate(button) as Button;
-        newButton.transform.SetParent(HUD.transform, false);
-        //NetworkServer.Spawn(newButton);
-        newButton.onClick.AddListener(initialization);
-    }
+    // public void instantiateButton(){
+    //     Button newButton = Instantiate(button) as Button;
+    //     newButton.transform.SetParent(HUD.transform, false);
+    //     //NetworkServer.Spawn(newButton);
+    //     newButton.onClick.AddListener(initialization);
+    // }
 
     public void toReadyState()
     {
