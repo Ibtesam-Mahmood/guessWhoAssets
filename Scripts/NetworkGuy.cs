@@ -7,6 +7,17 @@ using UnityEngine;
 
 public class NetworkGuy : NetworkBehaviour
 {
+
+    public enum GameRole
+    {
+        Hunter,
+        Hider,
+        None
+    }
+
+    [SyncVar]
+    public GameRole role = GameRole.None;
+
     private void Start()
     {
         if (isLocalPlayer)
@@ -27,5 +38,13 @@ public class NetworkGuy : NetworkBehaviour
             }
         }
     }
+
+    
+    [Command(requiresAuthority = false)]
+    public void CmdSetRole(GameRole role)
+    {
+        this.role = role;
+    }
+    
 
 }
