@@ -19,6 +19,9 @@ public class NetworkGuy : NetworkBehaviour
     [SyncVar(hook = nameof(SetRole))]
     public GameRole role = GameRole.None;
 
+    [SyncVar(hook = nameof(SetGuess))]
+    public int guessCount = 3;
+
     //Guess Button
     private GameObject button;
 
@@ -56,6 +59,20 @@ public class NetworkGuy : NetworkBehaviour
         SetButton();
     }
 
+    void SetGuess(int oldGuess, int newGuess)
+    {
+        if (isLocalPlayer)
+        {
+            Health health = this.gameObject.GetComponent<Health>();
+            health.SetHealth(health.MaximumHealth * newGuess / 3);
+            if(guessCount == 0)
+            {
+                NetworkServer.Destroy(this.gameObject);
+                (NetworkManager.singleton as GameManager).StopClient();
+            }
+        }
+    }
+
     private void OnConnectedToServer()
     {
         SetButton();
@@ -71,8 +88,43 @@ public class NetworkGuy : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void CmdKill()
     {
-        Debug.Log("Killed");
+        List<NetworkGuy> players = (NetworkManager.singleton as GameManager).Players;
+
+        players.Remove(this);
+
+        List<GameObject> searchedObjects = (NetworkManager.singleton as GameManager).AI;
+        foreach(NetworkGuy player in players)
+        {
+            searchedObjects.Add(player.gameObject);
+        }
+
+        Vector3 position = this.gameObject.transform.position;
+        foreach (GameObject enemy in searchedObjects)
+        {
+            float curDistance = Vector3.Distance(enemy.transform.position, position);
+            if (curDistance <= distance)
+            {
+                NetworkGuy guy = enemy.GetComponent<NetworkGuy>();
+                if(guy == null)
+                {
+                    //Bad aim
+                    Debug.Log("AI");
+                    this.guessCount -= 1;
+                    
+                }
+                else
+                {
+                    //killed client
+                    Debug.Log("Player");
+                    this.guessCount += 1;
+                    guy.guessCount = 0;
+                }
+            }
+        }
+
     }
+
+
 
     private void SetButton()
     {
@@ -99,21 +151,3 @@ public class NetworkGuy : NetworkBehaviour
     
 
 }
-
-/*
- * if (!isLocalPlayer || role != GameRole.Hunter)
-            return;
-
-        target = null;
-
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        Vector3 position = this.gameObject.transform.position;
-        foreach (GameObject enemy in enemies)
-        {
-            float curDistance = Vector3.Distance(enemy.transform.position, position);
-            if (curDistance <= distance)
-            {
-                target = enemy;
-            }
-        }
- */
