@@ -15,13 +15,12 @@ public class GameManager : NetworkManager
 {
     public Transform generalSpawn;
     public List<Transform> transforms;
-    public GameObject InventoryCanvas;
-    public Button button;
-    public float distance = 10f;
+
+    private Dictionary<int, GameObject> characterCounts = new Dictionary<int, GameObject>(0);
 
     protected GameObject target;
 
-    protected List<GameObject> AI = new List<GameObject>(0);
+    private List<GameObject> AI = new List<GameObject>(0);
     private List<NetworkGuy> players = new List<NetworkGuy>(0);
 
     private GameHostState state;
@@ -30,27 +29,9 @@ public class GameManager : NetworkManager
     private Button _button;
     bool serverInitialized = false;
 
-
-    
-    public void Update(){
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        Vector3 position = hunter.transform.position;
-        foreach(GameObject enemy in enemies){
-            if(hunter != null){
-                float curDistance = Vector3.Distance(enemy.transform.position, position);
-                if(curDistance <= distance){
-                    target = enemy;
-                }
-            }
-        }
-        target = null;
-    }
-
     public override void OnStartServer()
     {
         toReadyState();
-
-        instantiateKillButton();
 
         serverInitialized = true;
     }
@@ -100,11 +81,12 @@ public class GameManager : NetworkManager
         base.OnServerDisconnect(conn);
     }
 
+    /*
     public void instantiateKillButton(){
         _button = button;
         Button newButton = Instantiate(_button) as Button;
         newButton.transform.SetParent(InventoryCanvas.transform, false);
-    }
+    }*/
 
     public void toReadyState()
     {
@@ -119,7 +101,6 @@ public class GameManager : NetworkManager
     {
         for (int i = 0; i < transforms.Count; i++)
         {
-            Debug.Log("Running");
             GameObject temp = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "GuyAI"), transforms[i].position, transforms[i].rotation);
             NetworkServer.Spawn(temp);
             AI.Add(temp);

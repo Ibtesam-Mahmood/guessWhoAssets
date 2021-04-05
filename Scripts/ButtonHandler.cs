@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace GuessWho
 {
-    public class ButtonHandler : GameManager
+    public class ButtonHandler : MonoBehaviour
     {
+        /*
         public void killEnemy(){
             Debug.Log("Clicked");
                 if(AI.Contains(target)){
@@ -15,5 +16,6 @@ namespace GuessWho
                     AI.Remove(target);
             }
         }
+        */
     }
 }

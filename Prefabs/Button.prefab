@@ -116,24 +116,11 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 1080568352462279454}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4419703985684159274, guid: 7ae3a30fe7aaa4f14998ea03adee942d,
-          type: 3}
-        m_TargetAssemblyTypeName: GuessWho.ButtonHandler, Assembly-CSharp
-        m_MethodName: killEnemy
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &1080568353123147929
 GameObject:
   m_ObjectHideFlags: 0
