@@ -15,21 +15,44 @@ public class GameManager : NetworkManager
 {
     public Transform generalSpawn;
     public List<Transform> transforms;
-    public GameObject HUD;
+    public GameObject InventoryCanvas;
     public Button button;
+    public float distance = 10f;
+
+    protected GameObject target;
 
     private List<GameObject> AI = new List<GameObject>(0);
     private List<NetworkGuy> players = new List<NetworkGuy>(0);
 
     private GameHostState state;
 
+    private GameObject hunter;
+    private Button _button;
+    bool serverInitialized = false;
+
+
     
-    
+    public void Update(){
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        Vector3 position = hunter.transform.position;
+        foreach(GameObject enemy in enemies){
+            if(hunter != null){
+                float curDistance = Vector3.Distance(enemy.transform.position, position);
+                if(curDistance <= distance){
+                    target = enemy;
+                }
+            }
+        }
+        target = null;
+    }
+
     public override void OnStartServer()
     {
         toReadyState();
 
-        //instantiateButton();
+        instantiateKillButton();
+
+        serverInitialized = true;
     }
 
     public override void OnServerAddPlayer(NetworkConnection conn){
@@ -50,6 +73,9 @@ public class GameManager : NetworkManager
         //Assign role
         if (numPlayers == 1)
         {
+
+            hunter = player;
+
             //Hunter
             guy.CmdSetRole(NetworkGuy.GameRole.Hunter);
         }
@@ -74,12 +100,11 @@ public class GameManager : NetworkManager
         base.OnServerDisconnect(conn);
     }
 
-    // public void instantiateButton(){
-    //     Button newButton = Instantiate(button) as Button;
-    //     newButton.transform.SetParent(HUD.transform, false);
-    //     //NetworkServer.Spawn(newButton);
-    //     newButton.onClick.AddListener(initialization);
-    // }
+    public void instantiateKillButton(){
+        _button = button;
+        Button newButton = Instantiate(_button) as Button;
+        newButton.transform.SetParent(InventoryCanvas.transform, false);
+    }
 
     public void toReadyState()
     {
