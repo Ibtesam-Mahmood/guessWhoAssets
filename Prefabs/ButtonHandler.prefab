@@ -43,3 +43,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 234047d86778c4c3ab0d65ae72c436f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 1
+  PersistNetworkManagerToOfflineScene: 0
+  runInBackground: 1
+  autoStartServerBuild: 1
+  serverTickRate: 30
+  serverBatching: 1
+  serverBatchInterval: 0
+  offlineScene: 
+  onlineScene: 
+  transport: {fileID: 0}
+  networkAddress: localhost
+  maxConnections: 100
+  disconnectInactiveConnections: 0
+  disconnectInactiveTimeout: 60
+  authenticator: {fileID: 0}
+  playerPrefab: {fileID: 0}
+  autoCreatePlayer: 1
+  playerSpawnMethod: 0
+  spawnPrefabs: []
+  generalSpawn: {fileID: 0}
+  transforms: []
+  InventoryCanvas: {fileID: 0}
+  button: {fileID: 0}
+  distance: 10

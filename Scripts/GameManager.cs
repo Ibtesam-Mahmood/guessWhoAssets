@@ -21,7 +21,7 @@ public class GameManager : NetworkManager
 
     protected GameObject target;
 
-    private List<GameObject> AI = new List<GameObject>(0);
+    protected List<GameObject> AI = new List<GameObject>(0);
     private List<NetworkGuy> players = new List<NetworkGuy>(0);
 
     private GameHostState state;
