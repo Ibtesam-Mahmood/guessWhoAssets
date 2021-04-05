@@ -74,11 +74,6 @@ public class GameManager : NetworkManager
         
     }
 
-    public void initialization(){
-        
-
-    }
-
     // --- AI control functions ---
     private void initializeAI()
     {
