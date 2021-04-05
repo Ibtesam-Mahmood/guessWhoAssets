@@ -22,11 +22,11 @@ namespace MoreMountains.TopDownEngine {
         void Update()
         {
             // print(Input.inputString);
-            if (Input.GetButtonDown("Player1_Dash"))
-            {
-                go.SetActive(toggled);
-                toggled = !toggled;
+                if (Input.GetButtonDown("Player1_Dash"))
+                {
+                    go.SetActive(toggled);
+                    toggled = !toggled;
+                }
             }
         }
     }
-}
