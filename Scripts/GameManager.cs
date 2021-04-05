@@ -16,12 +16,24 @@ public class GameManager : NetworkManager
     public Transform generalSpawn;
     public List<Transform> transforms;
 
-    private Dictionary<int, GameObject> characterCounts = new Dictionary<int, GameObject>(0);
-
     protected GameObject target;
 
-    private List<GameObject> AI = new List<GameObject>(0);
+    private List<GameObject> ai = new List<GameObject>(0);
     private List<NetworkGuy> players = new List<NetworkGuy>(0);
+
+    public List<NetworkGuy> Players 
+    {
+        get {
+            return players;
+        }
+    }
+    public List<GameObject> AI
+    {
+        get
+        {
+            return ai;
+        }
+    }
 
     private GameHostState state;
 
@@ -49,44 +61,44 @@ public class GameManager : NetworkManager
 
         players.Add(guy);
 
-        NetworkServer.AddPlayerForConnection(conn, player);
-
         //Assign role
-        if (numPlayers == 1)
+        if (numPlayers == 0)
         {
 
             hunter = player;
 
             //Hunter
-            guy.CmdSetRole(NetworkGuy.GameRole.Hunter);
+            guy.role = NetworkGuy.GameRole.Hunter;
         }
         else
         {
             //Hider
-            guy.CmdSetRole(NetworkGuy.GameRole.Hider);
+            guy.role = NetworkGuy.GameRole.Hider;
         }
+
+
+        NetworkServer.AddPlayerForConnection(conn, player);
+
 
     }
 
     public override void OnServerDisconnect(NetworkConnection conn)
     {
-        if(numPlayers == 0)
-        {
-            toReadyState();
-        }
-
         players.Remove(conn.identity.GetComponent<NetworkGuy>());
 
         // call base functionality (actually destroys the player)
         base.OnServerDisconnect(conn);
-    }
 
-    /*
-    public void instantiateKillButton(){
-        _button = button;
-        Button newButton = Instantiate(_button) as Button;
-        newButton.transform.SetParent(InventoryCanvas.transform, false);
-    }*/
+        if (numPlayers == 0)
+        {
+            toReadyState();
+        }
+        else
+        {
+            Debug.Log(players[0].role);
+            players[0].role = NetworkGuy.GameRole.Hunter;
+        }
+    }
 
     public void toReadyState()
     {
@@ -103,17 +115,17 @@ public class GameManager : NetworkManager
         {
             GameObject temp = Instantiate(spawnPrefabs.Find(prefab => prefab.name == "GuyAI"), transforms[i].position, transforms[i].rotation);
             NetworkServer.Spawn(temp);
-            AI.Add(temp);
+            ai.Add(temp);
         }
     }
 
     private void disposeAI()
     {
         // destroy all AI
-        while (AI.Count > 0)
+        while (ai.Count > 0)
         {
-            GameObject temp = AI[0];
-            AI.RemoveAt(0);
+            GameObject temp = ai[0];
+            ai.RemoveAt(0);
             Destroy(temp);
         }
     }
