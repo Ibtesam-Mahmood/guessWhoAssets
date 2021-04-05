@@ -19,7 +19,7 @@ public class GameManager : NetworkManager
     public Button button;
 
     private List<GameObject> AI = new List<GameObject>(0);
-    private List<GameObject> players = new List<GameObject>(0);
+    private List<NetworkGuy> players = new List<NetworkGuy>(0);
 
     private GameHostState state;
 
@@ -38,17 +38,26 @@ public class GameManager : NetworkManager
         {
             return;
         }
-
-        if(numPlayers == 1)
-        {
-            //Hunter
-        }
         
         GameObject player = Instantiate(playerPrefab, generalSpawn.position, generalSpawn.rotation);
-        
-        players.Add(player);
+
+        NetworkGuy guy = player.GetComponent<NetworkGuy>();
+
+        players.Add(guy);
 
         NetworkServer.AddPlayerForConnection(conn, player);
+
+        //Assign role
+        if (numPlayers == 1)
+        {
+            //Hunter
+            guy.CmdSetRole(NetworkGuy.GameRole.Hunter);
+        }
+        else
+        {
+            //Hider
+            guy.CmdSetRole(NetworkGuy.GameRole.Hider);
+        }
 
     }
 
@@ -59,6 +68,7 @@ public class GameManager : NetworkManager
             toReadyState();
         }
 
+        players.Remove(conn.identity.GetComponent<NetworkGuy>());
 
         // call base functionality (actually destroys the player)
         base.OnServerDisconnect(conn);
