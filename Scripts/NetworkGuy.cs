@@ -93,84 +93,79 @@ public class NetworkGuy : NetworkBehaviour
         Debug.Log("Killing with " + this.netId);
         List<NetworkGuy> players = (NetworkManager.singleton as GameManager).Players;
 
-        List<GameObject> searchedObjects = (NetworkManager.singleton as GameManager).AI;
+        List<GameObject> ais = (NetworkManager.singleton as GameManager).AI;
 
-        float minIndexAI = -1;
-        float smallestDistanceAI = distance;
+        List<dynamic> search = new List<dynamic>(0);
 
-        Vector3 position = this.gameObject.transform.position;
-        foreach (GameObject enemy in searchedObjects)
-        {
-            try
-            {
-                float curDistance = Vector3.Distance(enemy.transform.position, position);
-                if (curDistance <= distance)
-                {
-                    if (curDistance <= smallestDistanceAI)
-                    {
-                        smallestDistanceAI = curDistance;
-                        minIndexAI = searchedObjects.IndexOf(enemy);
-                    }
-
-                }
-            }catch(Exception)
-            {
-
-            }
-        }
-
-        float minIndexPlayers = -1;
-        float smallestDistancePlayers = distance;
-
-        foreach (NetworkGuy netGuy in players)
+        foreach(NetworkGuy netGuy in players)
         {
             if(this.netId != netGuy.netId)
             {
-                float curDistance = Vector3.Distance(netGuy.gameObject.transform.position, position);
-                if(curDistance <= distance)
+                search.Add(netGuy);
+            }
+        }
+        foreach(GameObject ai in ais)
+        {
+            search.Add(ai);
+        }
+
+        dynamic closest = null;
+        float smallestDistance = distance;
+
+        Vector3 position = this.gameObject.transform.position;
+        foreach (dynamic enemy in search)
+        {
+            try
+            {
+                Vector3 enemyPos;
+                if(enemy is NetworkGuy)
                 {
-                    if(curDistance <= smallestDistancePlayers)
-                    {
-                        smallestDistancePlayers = curDistance;
-                        minIndexPlayers = players.IndexOf(netGuy);
-                    }
+                    enemyPos = ((NetworkGuy)enemy).gameObject.transform.position;
                 }
+                else
+                {
+                    enemyPos = ((GameObject)enemy).transform.position;
+                }
+                float curDistance = Vector3.Distance(enemyPos, position);
+                if (curDistance <= distance)
+                {
+                    if (curDistance <= smallestDistance)
+                    {
+                        smallestDistance = curDistance;
+                        closest = enemy;
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+
             }
         }
 
-        /*
-        if (minIndexPlayers > 0 && smallestDistanceAI <= )
-        {
-        }
-        else if(minIndexAI > 0)
-        {
+        if (closest == null)
+            return;
 
-        }
-
-        GameObject e = searchedObjects[minIndex];
         
-
-        NetworkGuy guy = e.GetComponent<NetworkGuy>();
-
-        if (guy == null)
+        if(closest is NetworkGuy)
         {
-
-
-            //Bad aim
-            Debug.Log("AI");
-            this.guessCount -= 1;
-
+            NetworkGuy guy = (NetworkGuy)closest;
+            Debug.Log("Player");
+            Debug.Log("ThisID: " + this.netId);
+            Debug.Log("OtherID: " + guy.netId);
+            if(this.netId != guy.netId) {
+                this.guessCount += 1;
+                guy.guessCount = 0;
+            }
         }
         else
         {
-            Debug.Log("ThisID: " + this.netId);
-            Debug.Log("OtherID: " + guy.netId);
-            //killed client
-            Debug.Log("Player");
-            this.guessCount += 1;
-            guy.guessCount = 0;
+            //Bad aim
+            Debug.Log("AI");
+            this.guessCount -= 1;
         }
-        */
+
+        
 
     }
 
