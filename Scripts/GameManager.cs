@@ -93,7 +93,7 @@ public class GameManager : NetworkManager
         {
             toReadyState();
         }
-        else
+        else if(players[0].role != NetworkGuy.GameRole.Hunter)
         {
             Debug.Log(players[0].role);
             players[0].role = NetworkGuy.GameRole.Hunter;

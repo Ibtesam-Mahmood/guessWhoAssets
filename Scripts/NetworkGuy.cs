@@ -1,6 +1,7 @@
 using Mirror;
 using MoreMountains.Tools;
 using MoreMountains.TopDownEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -63,9 +64,10 @@ public class NetworkGuy : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
+            Debug.Log("Guesses " + newGuess);
             Health health = this.gameObject.GetComponent<Health>();
             health.SetHealth(health.MaximumHealth * newGuess / 3);
-            if(guessCount == 0)
+            if(newGuess == 0)
             {
                 NetworkServer.Destroy(this.gameObject);
                 (NetworkManager.singleton as GameManager).StopClient();
@@ -88,39 +90,87 @@ public class NetworkGuy : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void CmdKill()
     {
+        Debug.Log("Killing with " + this.netId);
         List<NetworkGuy> players = (NetworkManager.singleton as GameManager).Players;
 
-        players.Remove(this);
-
         List<GameObject> searchedObjects = (NetworkManager.singleton as GameManager).AI;
-        foreach(NetworkGuy player in players)
-        {
-            searchedObjects.Add(player.gameObject);
-        }
+
+        float minIndexAI = -1;
+        float smallestDistanceAI = distance;
 
         Vector3 position = this.gameObject.transform.position;
         foreach (GameObject enemy in searchedObjects)
         {
-            float curDistance = Vector3.Distance(enemy.transform.position, position);
-            if (curDistance <= distance)
+            try
             {
-                NetworkGuy guy = enemy.GetComponent<NetworkGuy>();
-                if(guy == null)
+                float curDistance = Vector3.Distance(enemy.transform.position, position);
+                if (curDistance <= distance)
                 {
-                    //Bad aim
-                    Debug.Log("AI");
-                    this.guessCount -= 1;
-                    
+                    if (curDistance <= smallestDistanceAI)
+                    {
+                        smallestDistanceAI = curDistance;
+                        minIndexAI = searchedObjects.IndexOf(enemy);
+                    }
+
                 }
-                else
+            }catch(Exception)
+            {
+
+            }
+        }
+
+        float minIndexPlayers = -1;
+        float smallestDistancePlayers = distance;
+
+        foreach (NetworkGuy netGuy in players)
+        {
+            if(this.netId != netGuy.netId)
+            {
+                float curDistance = Vector3.Distance(netGuy.gameObject.transform.position, position);
+                if(curDistance <= distance)
                 {
-                    //killed client
-                    Debug.Log("Player");
-                    this.guessCount += 1;
-                    guy.guessCount = 0;
+                    if(curDistance <= smallestDistancePlayers)
+                    {
+                        smallestDistancePlayers = curDistance;
+                        minIndexPlayers = players.IndexOf(netGuy);
+                    }
                 }
             }
         }
+
+        /*
+        if (minIndexPlayers > 0 && smallestDistanceAI <= )
+        {
+        }
+        else if(minIndexAI > 0)
+        {
+
+        }
+
+        GameObject e = searchedObjects[minIndex];
+        
+
+        NetworkGuy guy = e.GetComponent<NetworkGuy>();
+
+        if (guy == null)
+        {
+
+
+            //Bad aim
+            Debug.Log("AI");
+            this.guessCount -= 1;
+
+        }
+        else
+        {
+            Debug.Log("ThisID: " + this.netId);
+            Debug.Log("OtherID: " + guy.netId);
+            //killed client
+            Debug.Log("Player");
+            this.guessCount += 1;
+            guy.guessCount = 0;
+        }
+        */
 
     }
 
@@ -140,6 +190,7 @@ public class NetworkGuy : NetworkBehaviour
             button.SetActive(true);
             Button innerButton = button.GetComponent<Button>();
             Debug.Log(innerButton.gameObject.name);
+            innerButton.onClick.RemoveAllListeners();
             innerButton.onClick.AddListener(CmdKill);
         }
         else
