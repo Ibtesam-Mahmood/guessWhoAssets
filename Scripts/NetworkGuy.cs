@@ -34,7 +34,7 @@ public class NetworkGuy : NetworkBehaviour
 
         if (isLocalPlayer)
         {
-            button = GameObject.FindGameObjectWithTag("Chooser");
+            button = (NetworkManager.singleton as GameManager).killButton;
             SetButton();
             Character character = this.GetComponent<Character>();
 

@@ -21,6 +21,13 @@ public class GameManager : NetworkManager
     private List<GameObject> ai = new List<GameObject>(0);
     private List<NetworkGuy> players = new List<NetworkGuy>(0);
 
+    public GameObject killButton;
+
+    public override void Awake()
+    {
+        killButton = GameObject.FindGameObjectWithTag("Chooser");
+    }
+
     public List<NetworkGuy> Players 
     {
         get {
