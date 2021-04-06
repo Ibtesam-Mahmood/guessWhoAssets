@@ -13,6 +13,7 @@ public enum GameHostState
 
 public class GameManager : NetworkManager
 {
+    [SerializeField] GameObject LobbySplash;
     public Transform generalSpawn;
     public List<Transform> transforms;
 
@@ -135,5 +136,11 @@ public class GameManager : NetworkManager
             ai.RemoveAt(0);
             Destroy(temp);
         }
+    }
+
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+        LobbySplash.SetActive(true);
     }
 }
