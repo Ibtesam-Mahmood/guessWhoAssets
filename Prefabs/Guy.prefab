@@ -625,7 +625,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   role: 2
-  button: {fileID: 0}
+  guessCount: 3
+  distance: 10
 --- !u!1 &874164245219361983
 GameObject:
   m_ObjectHideFlags: 0
@@ -13303,7 +13304,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: ee48e057f2a13e34e803795ebf382cf8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
