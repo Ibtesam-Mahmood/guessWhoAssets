@@ -13,7 +13,9 @@ public enum GameHostState
 
 public class GameManager : NetworkManager
 {
-    [SerializeField] GameObject LobbySplash;
+
+    public GameObject LobbySplash;
+
     public Transform generalSpawn;
     public List<Transform> transforms;
 
@@ -89,6 +91,8 @@ public class GameManager : NetworkManager
 
 
     }
+
+    
 
     public override void OnServerDisconnect(NetworkConnection conn)
     {
