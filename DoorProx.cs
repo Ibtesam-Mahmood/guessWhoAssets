@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class DoorProx : MonoBehaviour
 {
-   
+    
     [SerializeField] private Animator door = null;
-
-    private bool isOpen = false;
+    
+    [SerializeField] private bool isOpen = false;
     
     void OnTriggerEnter(Collider col){
         if(!isOpen && col.tag == "Player" && door.GetCurrentAnimatorStateInfo(0).IsName("doorClosed")){

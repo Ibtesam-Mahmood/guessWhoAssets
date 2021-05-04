@@ -49,7 +49,7 @@ public class Pause : MonoBehaviour
 
     public void loadGameScene()
     {
-        SceneManager.LoadScene("GuessWhoMap");
+        SceneManager.LoadScene("GuessWhoREMAKE");
     }
 
     public void exitGame()
